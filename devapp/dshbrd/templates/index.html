@@ -1,0 +1,79 @@
+{% extends "hdr.html" %}
+
+{% load static %}
+
+{% block title %}
+Dashboard | Home
+{% endblock title %}
+
+{% block content %}
+
+<select id="year">
+   {% for key, values in years_list.items %}-->
+            <option selected value="{{values}}">{{values}}</option>
+    {% endfor %}
+</select>
+<div id="tester" style="width:90%;height:250px;"></div>
+<div id="tester2" style="width:90%;height:250px;"></div>
+<script>
+
+<!--var trace1 = {-->
+<!--  x: ['India', 'orangutans', 'monkeys'],-->
+<!--  y: [20, 0, 0],-->
+<!--  name: 'UP',-->
+<!--  type: 'bar'-->
+<!--};-->
+
+<!--var trace2 = {-->
+<!--  x: ['India', 'orangutans', 'monkeys'],-->
+<!--  y: [12, 0, 0],-->
+<!--  name: 'MP',-->
+<!--  type: 'bar'-->
+<!--};-->
+
+<!--var data = [trace1, trace2];-->
+
+<!--var layout = {barmode: 'group'};-->
+
+<!--Plotly.newPlot('tester', data, layout);-->
+
+
+function plot_data(data){
+    var mdata = [];
+    $("#tester2").empty();
+    for (var i = 0; i < data.length; i++) {
+        console.log(data[i]);
+        mdata.push(data[i]);
+    }
+
+    var layout = {barmode: 'group'};
+
+    Plotly.newPlot('tester2', mdata, layout);
+
+
+}
+
+function call_data(){
+    $.ajax({
+                  url: '/call',
+                  data: {
+                    'year': $("#year").val()
+                  },
+                  contentType: "application/json; charset=utf-8",
+                  dataType: 'json',
+                  success: function (dv) {
+                        console.log(dv[1]);
+                        plot_data(dv);
+                  }
+               });
+ }
+
+$(document).ready(function(){
+call_data();
+ $('#year').change(function () {
+     call_data();
+  });
+
+ });
+</script>
+{% endblock content %}

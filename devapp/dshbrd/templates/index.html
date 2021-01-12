@@ -16,28 +16,6 @@ Dashboard | Home
 <div id="tester" style="width:90%;height:250px;"></div>
 <div id="tester2" style="width:90%;height:250px;"></div>
 <script>
-
-<!--var trace1 = {-->
-<!--  x: ['India', 'orangutans', 'monkeys'],-->
-<!--  y: [20, 0, 0],-->
-<!--  name: 'UP',-->
-<!--  type: 'bar'-->
-<!--};-->
-
-<!--var trace2 = {-->
-<!--  x: ['India', 'orangutans', 'monkeys'],-->
-<!--  y: [12, 0, 0],-->
-<!--  name: 'MP',-->
-<!--  type: 'bar'-->
-<!--};-->
-
-<!--var data = [trace1, trace2];-->
-
-<!--var layout = {barmode: 'group'};-->
-
-<!--Plotly.newPlot('tester', data, layout);-->
-
-
 function plot_data(data){
     var mdata = [];
     $("#tester2").empty();
@@ -62,8 +40,10 @@ function call_data(){
                   contentType: "application/json; charset=utf-8",
                   dataType: 'json',
                   success: function (dv) {
+                   if (dv != "error"){
                         console.log(dv[1]);
                         plot_data(dv);
+                        }
                   }
                });
  }

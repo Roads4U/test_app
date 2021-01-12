@@ -44,14 +44,7 @@ def data_population_p(request):
 
 @login_required()
 def data_population_aj(request):
-    # year =2019
     year = (request.GET["year"])
-
-    # x: ['India', 'orangutans', 'monkeys'],
-    # y: [12, 0, 0],
-    # name: 'MP',
-    # type: 'bar'
-    # cntry_index = {"India":1,"Amrc":}
     yr_ftch = data_population.objects.order_by('year').values('year').distinct()
     country_ftch = data_population.objects.filter(year=year).order_by('country').values('country').distinct()
     country = {}
@@ -67,16 +60,22 @@ def data_population_aj(request):
 
     data_grp_ftch = data_population.objects.filter(year=year).values("country","province").annotate(Sum('population'))
     data_grp = []
-    for row in data_grp_ftch:
-        print(row)
-        data_temp = {}
-        data_temp["x"] = list(country.keys())
-        data_temp["y"] = [0] * len(country)
-        data_temp["y"][country[row["country"]]] = list([row["population__sum"]])[0]
-        data_temp["name"] = row["province"]
-        data_temp["type"] = "bar"
+    try:
+        for row in data_grp_ftch:
+            print(row)
+            data_temp = {}
+            data_temp["x"] = list(country.keys())
+            data_temp["y"] = [0] * len(country)
+            data_temp["y"][country[row["country"]]] = list([row["population__sum"]])[0]
+            data_temp["name"] = row["province"]
+            data_temp["type"] = "bar"
 
-        data_grp.append((data_temp))
+            data_grp.append((data_temp))
 
-    print(data_grp)
-    return HttpResponse(json.dumps(data_grp), {"years_list": years_list})
+        return HttpResponse(json.dumps(data_grp), {"years_list": years_list})
+
+    except Exception as e:
+        print(e)
+        return HttpResponse("Error")
+
+
